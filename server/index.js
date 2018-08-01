@@ -3,14 +3,15 @@ const bodyPaser = require('body-parser');
 const session = require('express-session');
 const massive = require('massive');
 const axios = require('axios');
+const facebookController = require('./facebookController')
+const instagramController = require('./instagramController')
+const twitterController = require('./twitterController')
 require('dotenv').config();
-
 
 const { SERVER_PORT, REACT_APP_DOMAIN, REACT_APP_CLIENT_ID, CLIENT_SECRET, SESSION_SECRET, CONNECTION_STRING } = process.env
 
 const app = express();
 app.use(bodyPaser.json());
-massive(process.env.CONNECTION_STRING).then(db => app.set('db', db));
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -18,8 +19,7 @@ app.use(
     saveUninitialized: false
   })
 )
-
-
+massive(process.env.CONNECTION_STRING).then(db => app.set('db', db));
 
 //AUTH ZERO
 app.get('/auth/callback', async (req, res) => {
@@ -36,35 +36,24 @@ app.get('/auth/callback', async (req, res) => {
   //use the access token to get user info for whoever just logged in
   console.log(responseWithToken.data.access_token)
   let responseWithUserData = await axios.get(`https://${REACT_APP_DOMAIN}/userinfo?access_token=${responseWithToken.data.access_token}`)
-
   req.session.user = responseWithUserData.data
   console.log(responseWithUserData.data)
-  res.redirect('/#/dashboard')
-
   //db calls
   // put user data on req.session object
-  // req.session.user = responseFromDb
-  // req.session = {user:{}}
-  // const db = req.app.get('db')
-  // let { sub, email, name, picture } = resWithUserData.data
-
-  // let foundUser = await db.find_user([sub])
-  // if (foundUser[0]) {
-  //   // put on session
-  //   req.session.user = foundUser[0];
-  //   res.redirect('/#/dashboard')
-  //   //slash above is "http://localhost:3000/"
-  // } else {
-  //   //create user
-  //   let createdUser = await db.create_user([name, email, sub, picture])
-  //   //put on session
-  //   req.session.user = createdUser[0]
-  //   res.redirect('/#/dashboard')
-  // }
-
-
-
-
+  const db = req.app.get('db')
+  let { sub, email, name, picture } = responseWithUserData.data
+  let foundUser = await db.find_user([sub])
+  if (foundUser[0]) {
+    // put on session
+    req.session.user = foundUser[0];
+    res.redirect('/#/dashboard')
+  } else {
+    //create user
+    let createdUser = await db.create_user([name, email, sub, picture])
+    //put on session
+    req.session.user = createdUser[0]
+    res.redirect('/#/dashboard')
+  }
   //This next block of code will be for fetching the facebook, instagram and twitter shiz when the time comes
   // app.get('/api/user-data', (req, res) => {
   //   if (req.session.user) {
@@ -74,6 +63,26 @@ app.get('/auth/callback', async (req, res) => {
   //   }
   // })
 })
+//Facebook EndPoints
+const facebook = '/facebook/goals'
+app.get(`${facebook}`, facebookController.getGoals)
+// app.put(`${facebook}`, facebookController.update)
+// app.post(`${facebook}`, facebookController.create)
+// app.delete(`${facebook}`, facebookController.delete)
+//Instagram EndPoints
+const instagram = '/instagram/goals'
+app.get(`${instagram}`, instagramController.getGoals)
+// app.put(`${instagram}`, instagramController.update)
+// app.post(`${instagram}`, instagramController.create)
+// app.delete(`${instagram}`, instagramController.delete)
+//Twitter EndPoints
+const twitter = '/twitter/goals'
+app.get(`${twitter}`, twitterController.getGoals)
+// app.put(`${twitter}`, twitterController.update)
+// app.post(`${twitter}`, twitterController.create)
+// app.delete(`${twitter}`, twitterController.delete)
+
+
 
 
 app.get('/api/logout', (req, res) => {
