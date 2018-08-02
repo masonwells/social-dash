@@ -67,14 +67,16 @@ app.get('/auth/callback', async (req, res) => {
 const facebook = '/facebook/goals'
 app.get(`${facebook}`, facebookController.getGoals)
 app.put(`${facebook}/:id`, facebookController.updateGoals)
-// app.post(`${facebook}`, facebookController.createGoals)
+app.post(`${facebook}`, facebookController.createGoals)
 // app.delete(`${facebook}`, facebookController.delete)
+
 //Instagram EndPoints
 const instagram = '/instagram/goals'
 app.get(`${instagram}`, instagramController.getGoals)
 // app.put(`${instagram}/:id`, instagramController.update)
 // app.post(`${instagram}`, instagramController.create)
 // app.delete(`${instagram}`, instagramController.delete)
+
 //Twitter EndPoints
 const twitter = '/twitter/goals'
 app.get(`${twitter}`, twitterController.getGoals)
