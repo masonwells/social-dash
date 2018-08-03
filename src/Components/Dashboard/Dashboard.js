@@ -19,14 +19,17 @@ class Dashboard extends Component {
       this.props.updateUserData(res.data)})
 }
 
-
+componentDidUpdate() {
+  axios.get('/api/user-data').then(res => {
+    //invoke action creator to update redux state
+    this.props.updateUserData(res.data)})
+}
 
 
 
 
   render() {
     let {user} = this.props
-    console.log(this.props.user)
     return (
       <div>
         <h1>Dashboard</h1>
@@ -34,9 +37,12 @@ class Dashboard extends Component {
           user.user_name ? (
               <div>
                 <Nav />
-                <Card social='facebook' />
-                <Card social='twitter' />
-                <Card social='instagram' />
+                <Card social='facebook'
+                      id = {user.id} />
+                <Card social='twitter'
+                      id = {user.id} />
+                <Card social='instagram'
+                      id = {user.id} />
               </div>
           ) : <p>Please log in to view this page</p>
         }

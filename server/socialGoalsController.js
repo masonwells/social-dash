@@ -1,8 +1,8 @@
 module.exports = {
   getGoals: (req, res) => {
     const db = req.app.get('db')
-    let {social} = req.params
-    db.get_social_goals([social])
+    let { social, id } = req.params
+    db.get_social_goals([social, id])
       .then(userGoals => res.status(200).send(userGoals))
   },
   updateGoals: (req, res) => {
@@ -24,11 +24,9 @@ module.exports = {
       .then(createdGoals => res.status(200).send(createdGoals))
   },
   delete: (req, res) => {
-    let completed = alert('Goals Deleted!')
     const db = req.app.get('db')
-    const {social_network} = req.body
     const { id } = req.params
-    db.delete_goals([id, social_network])
+    db.delete_goals([id])
       .then(deleted => { res.status(200).send() })
   }
 }
