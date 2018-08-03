@@ -3,9 +3,9 @@ const bodyPaser = require('body-parser');
 const session = require('express-session');
 const massive = require('massive');
 const axios = require('axios');
-const facebookController = require('./facebookController')
-const instagramController = require('./instagramController')
-const twitterController = require('./twitterController')
+const socialGoalsController = require('./socialGoalsController')
+// const instagramController = require('./instagramController')
+// const twitterController = require('./twitterController')
 require('dotenv').config();
 
 const { SERVER_PORT, REACT_APP_DOMAIN, REACT_APP_CLIENT_ID, CLIENT_SECRET, SESSION_SECRET, CONNECTION_STRING } = process.env
@@ -54,36 +54,21 @@ app.get('/auth/callback', async (req, res) => {
     req.session.user = createdUser[0]
     res.redirect('/#/dashboard')
   }
-  //This next block of code will be for fetching the facebook, instagram and twitter shiz when the time comes
-  // app.get('/api/user-data', (req, res) => {
-  //   if (req.session.user) {
-  //     res.status(200).send(req.session.user)
-  //   } else {
-  //     res.status(401).send('Nice try broooo')
-  //   }
-  // })
+  // This next block of code will be for fetching the facebook, instagram and twitter shiz when the time comes
+  app.get('/api/user-data', (req, res) => {
+    if (req.session.user) {
+      res.status(200).send(req.session.user)
+    } else {
+      res.status(401).send('Nice try broooo')
+    }
+  })
 })
-//Facebook EndPoints
-const facebook = '/facebook/goals'
-app.get(`${facebook}`, facebookController.getGoals)
-app.put(`${facebook}/:id`, facebookController.updateGoals)
-app.post(`${facebook}`, facebookController.createGoals)
-// app.delete(`${facebook}`, facebookController.delete)
-
-//Instagram EndPoints
-const instagram = '/instagram/goals'
-app.get(`${instagram}`, instagramController.getGoals)
-// app.put(`${instagram}/:id`, instagramController.update)
-// app.post(`${instagram}`, instagramController.create)
-// app.delete(`${instagram}`, instagramController.delete)
-
-//Twitter EndPoints
-const twitter = '/twitter/goals'
-app.get(`${twitter}`, twitterController.getGoals)
-// app.put(`${twitter}`, twitterController.update)
-// app.post(`${twitter}`, twitterController.create)
-// app.delete(`${twitter}`, twitterController.delete)
-
+//Social Goals EndPoints
+const social = '/social/goals'
+app.get(`${social}/:social`, socialGoalsController.getGoals)
+app.put(`${social}/:id`, socialGoalsController.updateGoals)
+app.post(`${social}`, socialGoalsController.createGoals)
+app.delete(`${social}/:id`, socialGoalsController.delete)
 
 
 
