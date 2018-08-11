@@ -25,8 +25,8 @@ module.exports = {
   },
   delete: (req, res) => {
     const db = req.app.get('db')
-    const { id } = req.params
-    db.delete_goals([id])
+    const { id, social } = req.params
+    db.delete_goals([id, social])
       .then(deleted => { res.status(200).send() })
   }
 }

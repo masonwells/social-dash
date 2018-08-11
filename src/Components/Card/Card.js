@@ -21,7 +21,7 @@ export default class Card extends Component {
     }
     )
   }
-  componentDidUpdate(){
+  componentDidUpdate() {
     const { social } = this.props
     const { id } = this.props
     axios.get(`/social/goals/${social}/${id}`).then(res => {
@@ -45,7 +45,7 @@ export default class Card extends Component {
       posts: value
     })
   }
-//update
+  //update
   editGoals() {
     const { social } = this.props
     const { id } = this.props
@@ -53,7 +53,7 @@ export default class Card extends Component {
       likes: this.state.likes,
       followers: this.state.followers,
       posts: this.state.posts
-    }).then(res =>{
+    }).then(res => {
       this.setState({
         likes: res.data.likes,
         followers: res.data.followrs,
@@ -61,23 +61,39 @@ export default class Card extends Component {
       })
     })
   }
-//post
-createGoals() {
-  const { social } = this.props
-  const { id } = this.props
+  //post
+  createGoals() {
+    const { social } = this.props
+    const { id } = this.props
 
-  axios.post(`/social/goals/${social}/${id}`, {
-    likes: this.state.likes,
-    followers: this.state.followers,
-    posts: this.state.posts
-  }).then(res =>{
-    this.setState({
-      likes: res.data.likes,
-      followers: res.data.followrs,
-      posts: res.data.posts
+    axios.post(`/social/goals/${social}/${id}`, {
+      likes: this.state.likes,
+      followers: this.state.followers,
+      posts: this.state.posts
+    }).then(res => {
+      this.setState({
+        likes: res.data.likes,
+        followers: res.data.followrs,
+        posts: res.data.posts
+      })
     })
-  })
-}
+  }
+  //delete
+  deleteGoals() {
+    const { social } = this.props
+    const { id } = this.props
+
+    axios.delete(`/social/goals/${id}/${social}`).then(
+      res => {
+        this.setState({
+          likes: res.data.likes,
+          followers: res.data.followrs,
+          posts: res.data.posts
+        })
+      })
+
+
+  }
 
 
 
@@ -98,10 +114,14 @@ createGoals() {
               <p> posts: {this.state.card ? this.state.card.posts : null}</p>
               <p>users id: {this.props.id}</p>
               <button onClick={() => { this.editGoals() }}>Edit goals</button>
-              <button onClick={() => { this.createGoals() }}>Create goals</button>
+              <button onClick={() => { this.deleteGoals() }}>Delete Goals</button>
 
             </div>
-          ) : <p>No data found</p>
+          ) : 
+          <div>
+          <button onClick={() => { this.createGoals() }}>Create goals</button>
+          <p>No data found</p>
+          </div>
         }
 
       </div>

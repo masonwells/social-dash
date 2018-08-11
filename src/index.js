@@ -7,6 +7,15 @@ import {Provider} from 'react-redux'
 import store from './ducks/store'
 import {unregister} from './registerServiceWorker';
 
+
+import './styles/index.css';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
+
+
+
+
 ReactDOM.render(
   <Provider store={store}>
   <HashRouter>
