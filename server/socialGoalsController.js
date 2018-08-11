@@ -7,9 +7,9 @@ module.exports = {
   },
   updateGoals: (req, res) => {
     const db = req.app.get('db')
-    const { likes, followers, posts, social_network } = req.body
+    const { likes, followers, posts } = req.body
     const { id, social } = req.params
-    db.update_social_goals([likes, followers, posts, social_network, id])
+    db.update_social_goals([likes, followers, posts, social, id])
       .then(goals => {
         console.log(goals)
         res.status(200).send(goals)
@@ -18,9 +18,9 @@ module.exports = {
   },
   createGoals: (req, res) => {
     const db = req.app.get('db')
-    const { likes, followers, posts, social_network } = req.body
-    const { id } = req.params
-    db.create_social_goals([likes, followers, posts, id, social_network])
+    const { likes, followers, posts } = req.body
+    const { id, social } = req.params
+    db.create_social_goals([likes, followers, posts, id, social])
       .then(createdGoals => res.status(200).send(createdGoals))
   },
   delete: (req, res) => {

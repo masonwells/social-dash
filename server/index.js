@@ -66,8 +66,8 @@ app.get('/auth/callback', async (req, res) => {
 //Social Goals EndPoints
 const social = '/social/goals'
 app.get(`${social}/:social/:id`, socialGoalsController.getGoals)
-app.put(`${social}/:id`, socialGoalsController.updateGoals)
-app.post(`${social}`, socialGoalsController.createGoals)
+app.put(`${social}/:social/:id`, socialGoalsController.updateGoals)
+app.post(`${social}/:social/:id`, socialGoalsController.createGoals)
 app.delete(`${social}/:id`, socialGoalsController.delete)
 
 
